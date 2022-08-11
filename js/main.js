@@ -50,7 +50,18 @@
 			sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
 			sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`
 		}
-	} setLayout()
+
+		let totalScrollHeight = 0;
+		yOffset = window.pageYOffset
+		for (let i = 0; i < sceneInfo.length; i++) {
+			totalScrollHeight += sceneInfo[i].scrollHeight;
+			if (totalScrollHeight >= yOffset) {
+				currentScene = i;
+				break;
+			}
+		}
+		document.body.setAttribute('id', `show-scene-${currentScene}`)
+	} 
 
 	function scrollLoop() {
 		prevScrollHeight = 0;
@@ -60,14 +71,20 @@
 
 		if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
 			currentScene++
+			// document.body.setAttribute('id', `show-scene-${currentScene}`)
 		}
 		if (yOffset < prevScrollHeight) {
-			if(currentScene === 0 ) {return}
+			if(currentScene === 0 ) return // 브라우저 바운스 효과로 인해 마이너스가 되는 것을 방지(모바일)
 			currentScene--
+			// document.body.setAttribute('id', `show-scene-${currentScene}`)
 		}
-		console.log(currentScene)
+		document.body.setAttribute('id', `show-scene-${currentScene}`)
 	}
 
+	setLayout();
+
+	window.addEventListener('load', setLayout) // 모~든 리소스들이 로드 끝났을 때.
+	// window.addEventListener('DOMcontentLoaded', setLayout) // html 객체들이 로드 끝났을 때. 그래서 img들은 미포함. load보다 실행 시점 빠름.
 	window.addEventListener('resize', setLayout)
 	window.addEventListener('scroll', () => {
 		yOffset = window.pageYOffset;
