@@ -103,7 +103,7 @@
 			if(sceneInfo[i].type === 'sticky'){
 				sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
 			} else if (sceneInfo[i].type === 'normal') {
-				sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight + window.innerHeight * 0.5;
+				sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight;
 			}
 			sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`
 		}
