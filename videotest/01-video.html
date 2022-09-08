@@ -24,19 +24,29 @@
 	</style>
 </head>
 <body class="before-load">
-	<video class="sample-video" src="../video/sample-low.mp4" muted></video>
-	<!-- <video class="sample-video" src="../video/sample-high.mp4" muted></video> -->
+	<!-- <video class="sample-video" src="../video/sample-low.mp4" muted></video> -->
+	<video class="sample-video" src="../video/sample-high.mp4" muted></video>
 
 	<script>
 		const videoElem = document.querySelector('.sample-video');
+		let videoDuration;
+
+		videoElem.addEventListener('loadeddata', function() {
+			console.log('비디오 로드 완료')
+			// video의 총 길이 알 수 있음
+			videoDuration = videoElem.duration;
+			init();
+		})
+
 		let progress;
 		let currentFrame;
 		function init() {
 			document.body.classList.remove('before-load');
 
 			window.addEventListener('scroll', function () {
+				// 현재 스크롤 가동 범위 / (전체 스크롤 가동 범위 - 마지막 창 크기)
 				progress = pageYOffset / (document.body.offsetHeight - window.innerHeight);
-				console.log(progress);
+				console.log('progress', progress);
 				if (progress < 0) progress = 0;
 				if (progress > 1) progress = 1;
 
