@@ -27,8 +27,11 @@
 	<canvas class="sample-canvas" width="1920" height="1080"></canvas>
 
 	<script>
+		// canvas 객체 가져오고 canvas 객체의 context를 가져오고 그 context로 컨트롤하는 건 기본 방식
+		// 1분코딩 캔버스 검색하면 canvas에 대해 전반적으로 강의한 내용 있음 참고하기
 		const canvas = document.querySelector('.sample-canvas');
 		const context = canvas.getContext('2d');
+
 		const videoImages = [];
 		let totalImagesCount = 960;
 		let progress;
@@ -46,7 +49,7 @@
 			document.body.classList.remove('before-load');
 			context.drawImage(videoImages[0], 0, 0);
 
-			window.addEventListener('scroll', function () {
+			window.addEventListener('scroll', function () { 
 				progress = pageYOffset / (document.body.offsetHeight - window.innerHeight);
 				if (progress < 0) progress = 0;
 				if (progress > 1) progress = 1;

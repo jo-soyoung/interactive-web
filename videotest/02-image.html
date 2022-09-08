@@ -28,6 +28,8 @@
 
 	<script>
 		const imgElem = document.querySelector('.sample-img');
+
+		// 이미지
 		let loadedImageCount= 0;
 		let totalImagesCount = 960;
 		const videoImages = [];
@@ -35,6 +37,7 @@
 		function loadImages() {
 			for (let i = 0; i < totalImagesCount; i++) {
 				let imgElem = new Image();
+				// 스크롤 상태에 따라서 이미지를 교체해줌
 				imgElem.src = `../video/002/IMG_${7027 + i}.JPG`;
 				videoImages.push(imgElem);
 
@@ -57,6 +60,8 @@
 			document.body.classList.remove('before-load');
 
 			window.addEventListener('scroll', function () {
+				// 아래는 비디오에서랑 동일한 로직
+				// 현재 스크롤 가동 범위 / (전체 스크롤 가동 범위 - 마지막 창 크기)
 				progress = pageYOffset / (document.body.offsetHeight - window.innerHeight);
 				if (progress < 0) progress = 0;
 				if (progress > 1) progress = 1;
@@ -67,6 +72,9 @@
 				});
 			});
 		}
+
+		window.addEventListener('load', init);
+		setImages();
 	</script>
 </body>
 </html>
