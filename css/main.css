@@ -190,7 +190,15 @@ a{
 
 .sticky-elem-canvas {
     top: 0;
-    background-color: grey;
+    height: 100%;
+}
+
+.sticky-elem-canvas canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* transform으로 정확히 중간 맞추는 건 js에서 해야 함.
+    js에서 transform 덮어씌우고 있기 때문. */
 }
 
 @media (min-width: 1024px) {

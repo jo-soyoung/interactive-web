@@ -134,6 +134,12 @@
 			}
 		}
 		document.body.setAttribute('id', `show-scene-${currentScene}`)
+
+		// window 창의 높이 = window.innerHeight
+		const heightRatio = window.innerHeight / 1080;
+		// 창 사이즈 높이에 딱 맞춰서 캔버스 크기 설정
+		// translate3d가 scale보다 먼저 실행되어야 함
+		sceneInfo[0].objs.canvas.style.transform=`translate3d(-50%, -50%, 0) scale(${heightRatio})`
 	}
 
 	// currentYOffset = 현재 씬에서 얼만큼 스크롤 되었는지에 대한 값
