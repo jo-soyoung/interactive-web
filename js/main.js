@@ -25,6 +25,7 @@
 			values: {
 				videoImageCount: 300, // 캔버스에 불러올 이미지 갯수
 				imageSequence: [0, 299],
+				canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
 				messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
 				messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
 				messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -180,6 +181,7 @@
 				// console.log('0 play');
 				let sequence = Math.round(calcValues(values.imageSequence, currentYOffset))
 				objs.context.drawImage(objs.videoImages[sequence], 0 , 0)
+				objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset)
 
 				if (scrollRatio <= 0.22) {
 					// in
@@ -294,8 +296,14 @@
 
 	setLayout();
 
-	window.addEventListener('load', setLayout) // 모~든 리소스들이 로드 끝났을 때.
-	window.addEventListener('DOMcontentLoaded', setLayout) // html 객체들이 로드 끝났을 때. 그래서 img들은 미포함. load보다 실행 시점 빠름.
+	// 모~든 리소스들이 로드 끝났을 때.
+	window.addEventListener('load', () => {
+		setLayout()
+        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0); // 배경 비디오 캔버스에 먼저 깔아주기
+	}) 
+
+	// html 객체들이 로드 끝났을 때. 그래서 img들은 미포함. load보다 실행 시점 빠름.
+	window.addEventListener('DOMcontentLoaded', setLayout)
 	window.addEventListener('resize', setLayout)
 	window.addEventListener('scroll', () => {
 		yOffset = window.pageYOffset;

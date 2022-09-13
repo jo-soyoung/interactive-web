@@ -203,10 +203,15 @@ a{
 
 @media (min-width: 1024px) {
     #scroll-section-0 h1 {
+        position: relative;
+        top: -10vh;
+        z-index: 5;
         font-size: 9vw;
+        text-align: center;
     }
     .main-message {
         font-size: 4vw;
+        opacity: 0;
     }
     .description {
         max-width: 1000px;
