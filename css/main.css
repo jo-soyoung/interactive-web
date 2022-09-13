@@ -29,6 +29,7 @@ a{
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 10;
     width: 100%;
     height: 44px;
     padding: 0 1rem;
@@ -37,6 +38,7 @@ a{
     position: absolute;
     top: 45px;
     left: 0;
+    z-index: 11;
     width: 100%;
     height: 52px;
     padding: 0 1rem;
@@ -170,6 +172,14 @@ a{
     background-color: darkorange;
 }
 
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem {
+    display: block;
+    /* opacity: 0; */
+}
+
 .sticky-elem {
     display: none;
     position: fixed;
@@ -177,12 +187,10 @@ a{
     left: 0;
     width: 100%;
 }
-#show-scene-0 #scroll-section-0 .sticky-elem,
-#show-scene-1 #scroll-section-1 .sticky-elem,
-#show-scene-2 #scroll-section-2 .sticky-elem,
-#show-scene-3 #scroll-section-3 .sticky-elem {
-    display: block;
-    opacity: 0;
+
+.sticky-elem-canvas {
+    top: 0;
+    background-color: grey;
 }
 
 @media (min-width: 1024px) {
