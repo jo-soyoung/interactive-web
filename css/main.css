@@ -76,7 +76,6 @@ a{
 .scroll-section {
     /*브라우저 높이의 절반만큼 패딩을 준다*/
     padding-top: 50vh;
-    border: 1px solid red;
 }
 
 #scroll-section-0 h1{
@@ -129,6 +128,7 @@ a{
 .desc-message {
     width: 50%;
     font-weight: bold;
+    opacity: 0;
 }
 
 .pin {
