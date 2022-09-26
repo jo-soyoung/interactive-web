@@ -107,6 +107,14 @@ a{
     font-size: 1.2rem;
 }
 
+.image-blend-canvas {
+}
+#scroll-section-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 
 
 .description {
