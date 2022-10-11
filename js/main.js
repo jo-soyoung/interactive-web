@@ -113,8 +113,9 @@
 			},
 			values: {
 				// 양 옆 흰색 여백
-				rect1X: [0, 0, {start: 0, end: 0}],
-				rect2X: [0, 0, {start: 0, end: 0}],
+				rect1X: [ 0, 0, { start: 0, end: 0 } ],
+				rect2X: [ 0, 0, { start: 0, end: 0 } ],
+				rectStartY: 0
 			}
 		}
 	];
@@ -306,7 +307,6 @@
 				// 가로 세로 모두 꽉 차게 하기 위해 여기서 세팅 (계산 필요)
 				const widthRatio = window.innerWidth / objs.canvas.width
 				const heightRatio = window.innerHeight / objs.canvas.height
-
 				let canvasScaleRatio
 
 				if (widthRatio <= heightRatio) {
@@ -316,12 +316,26 @@
 					// 캔버스보다 브라우저 창이 납작한 경우
 					canvasScaleRatio = widthRatio
 				}
-				objs.canvas.style.transform = `scale(${canvasScaleRatio})`
-				objs.context.drawImage(objs.images[0], 0, 0)
 
-				const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio
-				const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio
+				objs.canvas.style.transform = `scale(${canvasScaleRatio})`;
+				objs.context.fillStyle = 'white';
+				objs.context.drawImage(objs.images[0], 0, 0);
+
+				// 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+				const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
+				const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
 				
+				if (!values.rectStartY) {
+					// values.rectStartY = objs.canvas.getBoundingClientRect().top
+					values.rectStartY = objs.canvas.offsetTop + (objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2;
+
+					// / scrollHeight를 하는 이유는 scrollHeight에 대한 비율을 구하기 위함임
+					values.rect1X[2].start = (window.innerHeight / 2) / scrollHeight;
+					values.rect2X[2].start = (window.innerHeight / 2) / scrollHeight;
+					values.rect1X[2].end = values.rectStartY / scrollHeight
+					values.rect2X[2].end = values.rectStartY / scrollHeight
+				}
+
 				const whiteRectWidth = recalculatedInnerWidth * 0.15
 				values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2
 				values.rect1X[1] = values.rect1X[0] - whiteRectWidth
@@ -329,10 +343,20 @@
 				values.rect2X[1] = values.rect2X[0] + whiteRectWidth
 
 				// 좌우 흰색 박스 그리기 (x, y, width(정수 처리), height)
-				objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height)
-				objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height)
-
-				break;
+				// objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height)
+				// objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height)
+				objs.context.fillRect(
+					parseInt(calcValues(values.rect1X, currentYOffset)),
+					0,
+					parseInt(whiteRectWidth),
+					objs.canvas.height
+				);
+				objs.context.fillRect(
+					parseInt(calcValues(values.rect2X, currentYOffset)),
+					0,
+					parseInt(whiteRectWidth),
+					objs.canvas.height
+				);
 		}
 	}
 

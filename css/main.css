@@ -74,6 +74,7 @@ a{
 }
 
 .scroll-section {
+    position: relative;
     /*브라우저 높이의 절반만큼 패딩을 준다*/
     padding-top: 50vh;
 }
