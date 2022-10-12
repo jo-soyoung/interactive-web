@@ -115,6 +115,7 @@
 				// 양 옆 흰색 여백
 				rect1X: [ 0, 0, { start: 0, end: 0 } ],
 				rect2X: [ 0, 0, { start: 0, end: 0 } ],
+				blendHeight: [ 0, 0, { start: 0, end: 0 } ],
 				rectStartY: 0
 			}
 		}
@@ -417,7 +418,26 @@
 					// console.log('캔버스 닿은 후');
 					step = 2;
 					// 이미지 블렌드
-					objs.canvas.classList.add('sticky');
+					values.blendHeight[0] = 0
+					values.blendHeight[1] = objs.canvas.height
+					values.blendHeight[2].start = values.rect1X[2].end
+					values.blendHeight[2].end = values.blendHeight[2].start + 0.5
+					const blendHeight = calcValues(values.blendHeight, currentYOffset);
+
+					// drawImage api: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+					objs.context.drawImage(
+						objs.images[1], //image
+						0, //sx
+						objs.canvas.height - blendHeight, //sy
+						objs.canvas.width, //sWidth
+						blendHeight, //sHeight
+						0, //dx
+						objs.canvas.height - blendHeight, //dy
+						objs.canvas.width, //dWidth
+						blendHeight, //dHeight
+					)
+
+					objs.canvas.classList.add('sticky')
 					objs.canvas.style.top = `${-(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2}px`;
 				}
 
