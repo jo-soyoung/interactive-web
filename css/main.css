@@ -44,6 +44,12 @@ a{
     padding: 0 1rem;
     border-bottom: 1px solid #Ddd;
 }
+.local-nav-sticky .local-nav {
+    position: fixed;
+    top: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: saturate(180%) blur(15px);
+}
 
 .global-nav-links,
 .local-nav-links
@@ -157,7 +163,7 @@ a{
     left: 45%;
 }
 .mid-message {
-    max-width: 1000px;
+    width: 1000px;
     margin: 0 auto;
     padding: 0 1rem;
     font-size: 2rem;
@@ -170,7 +176,7 @@ a{
 
 .canvas-caption {
     max-width: 1000px;
-    margin: -6em 0 auto;
+    margin: -4em 0 auto;
     padding: 0 1rem;
     font-size: 1.2rem;
     color: #888;
