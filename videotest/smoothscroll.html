@@ -47,6 +47,7 @@
 			rafId = requestAnimationFrame(loop); // requestAnimationFrame을 썼기 때문에 초당 60번을 목표로 계속해서 이 부분을 call
 
 			// 변화가 멈췄을 때 (목표지점 - 현재지점이 1보다 작을 때) requestAnimationFrame 취소
+			// Math.abs를 써서 음수인 경우에도 양수 절댓값으로 바꿔주고 비교
 			if (Math.abs(pageYOffset - delayedYOffset) < 1) {
 				cancelAnimationFrame(rafId);
 				rafState = false;
