@@ -24,12 +24,12 @@
 	<script>
 		const box = document.querySelector('.box');
 		let acc = 0.1;
-		let delayedYOffset = 0;
+		let delayedYOffset = 0; // 스크롤의 y 위치 값
 		let rafId;
-		let rafState;
+		let rafState; // 특정 상태가 되었을 때(e.g. scroll 상태일 때), requestAnimationFrame을 재시작하기 위해서 설정
 
 		window.addEventListener('scroll', () => {
-			// box.style.width = `${window.pageYOffset}px`;
+			// box.style.width = `${window.pageYOffset}px`; // pageYOffset은 페이지에서 얼마나 스크롤이 되었는지에 대한 값
 			if (!rafState) {
 				rafId = requestAnimationFrame(loop);
 				rafState = true;
@@ -37,12 +37,16 @@
 		});
 
 		function loop() {
-			delayedYOffset = delayedYOffset + (pageYOffset - delayedYOffset) * acc;
+			// 이게 부드러운 스크롤을 만드는 포인트!
+			// CurrentPosition + (DestinationPosition - CurrentPosition) * 0.1
+			//  0.1은 임의의 숫자. 10%정도씩 더하는 것
+			delayedYOffset = delayedYOffset + (pageYOffset - delayedYOffset) * acc; 
 			box.style.width = `${delayedYOffset}px`;
 			console.log('loop');
 
-			rafId = requestAnimationFrame(loop);
+			rafId = requestAnimationFrame(loop); // requestAnimationFrame을 썼기 때문에 초당 60번을 목표로 계속해서 이 부분을 call
 
+			// 변화가 멈췄을 때 (목표지점 - 현재지점이 1보다 작을 때) requestAnimationFrame 취소
 			if (Math.abs(pageYOffset - delayedYOffset) < 1) {
 				cancelAnimationFrame(rafId);
 				rafState = false;
