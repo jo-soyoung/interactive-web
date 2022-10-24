@@ -1,10 +1,13 @@
 // 전역변수 대신 지역변수를 쓰는 게 좋다
 (() => {
-
 	let yOffset = 0; // window.pageYOffset 대신 쓸 변수
 	let prevScrollHeight = 0; // 현재 스크롤 위치보다 이전에 위치한 스크롤 섹션들의 스크롤 높이들의 합
 	let currentScene = 0; // 현재 활성화된 씬
 	let enterNewScene = false; // 새로운 scene이 시작된 순간에만 true
+	let acc = 0.1;
+	let delayedYOffset = 0; // 스크롤의 y 위치 값
+	let rafId;
+	let rafState; // 특정 상태가 되었을 때(e.g. scroll 상태일 때), requestAnimationFrame을 재시작하기 위해서 설정
 
 	const sceneInfo = [
 		{
@@ -223,8 +226,8 @@
 		switch (currentScene) {
 			case 0:
 				// console.log('0 play');
-				let sequence = Math.round(calcValues(values.imageSequence, currentYOffset))
-				objs.context.drawImage(objs.videoImages[sequence], 0 , 0)
+				// let sequence = Math.round(calcValues(values.imageSequence, currentYOffset))
+				// objs.context.drawImage(objs.videoImages[sequence], 0 , 0)
 				objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset)
 
 				if (scrollRatio <= 0.22) {
@@ -271,8 +274,8 @@
 	
 			case 2:
 				// console.log('2 play');
-				let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset))
-				objs.context.drawImage(objs.videoImages[sequence2], 0 , 0)
+				// let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset))
+				// objs.context.drawImage(objs.videoImages[sequence2], 0 , 0)
 
 				if (scrollRatio <= 0.5) {
 					objs.canvas.style.opacity = calcValues(values.canvas_opacity_in)
@@ -481,12 +484,12 @@
 			prevScrollHeight += sceneInfo[i].scrollHeight
 		}
 
-		if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+		if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
 			enterNewScene = true;
 			currentScene++
 			document.body.setAttribute('id', `show-scene-${currentScene}`)
 		}
-		if (yOffset < prevScrollHeight) {
+		if (delayedYOffset < prevScrollHeight) {
 			if(currentScene === 0 ) return // 브라우저 바운스 효과로 인해 마이너스가 되는 것을 방지(모바일)
 			enterNewScene = true;
 			currentScene--
@@ -496,6 +499,44 @@
 
 		if(enterNewScene) return;
 		playAnimation()
+	}
+
+	function loop() {
+		delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+		if (!enterNewScene) {
+			if (currentScene === 0 || currentScene === 2) {
+				const currentYOffset = delayedYOffset - prevScrollHeight;
+				const objs = sceneInfo[currentScene].objs;
+				const values = sceneInfo[currentScene].values;
+				let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+				if (objs.videoImages[sequence]) {
+					objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+				}
+			}
+		}
+
+        // 일부 기기에서 페이지 끝으로 고속 이동하면 body id가 제대로 인식 안되는 경우를 해결
+        // 페이지 맨 위로 갈 경우: scrollLoop와 첫 scene의 기본 캔버스 그리기 수행
+        if (delayedYOffset < 1) {
+            scrollLoop();
+            sceneInfo[0].objs.canvas.style.opacity = 1;
+            sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+        }
+        // 페이지 맨 아래로 갈 경우: 마지막 섹션은 스크롤 계산으로 위치 및 크기를 결정해야할 요소들이 많아서 1픽셀을 움직여주는 것으로 해결
+        if ((document.body.offsetHeight - window.innerHeight) - delayedYOffset < 1) {
+            let tempYOffset = yOffset;
+            scrollTo(0, tempYOffset - 1);
+        }
+
+		rafId = requestAnimationFrame(loop); // requestAnimationFrame을 썼기 때문에 초당 60번을 목표로 계속해서 이 부분을 call
+
+		// 변화가 멈췄을 때 (목표지점 - 현재지점이 1보다 작을 때) requestAnimationFrame 취소
+		// Math.abs를 써서 음수인 경우에도 양수 절댓값으로 바꿔주고 비교
+		if (Math.abs(yOffset - delayedYOffset) < 1) {
+			cancelAnimationFrame(rafId);
+			rafState = false;
+		}
 	}
 
 	setLayout();
@@ -513,5 +554,11 @@
 		yOffset = window.pageYOffset;
 		scrollLoop();
 		checkMenu();
+		loop();
+		
+		if (!rafState) {
+			rafId = requestAnimationFrame(loop);
+			rafState = true;
+		}
 	})
 }) ();
