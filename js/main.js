@@ -149,7 +149,6 @@
 			sceneInfo[3].objs.images.push(imgElem3);
 		}
 	}
-	setCanvasImages()
 
 	function checkMenu() {
 		if(yOffset > 44) { // 44는 global-nav의 높이. global-nav가 화면에서 스크롤되고 나면 그때 아래 class 붙여주기
@@ -549,7 +548,12 @@
 
 	// html 객체들이 로드 끝났을 때. 그래서 img들은 미포함. load보다 실행 시점 빠름.
 	window.addEventListener('DOMcontentLoaded', setLayout)
-	window.addEventListener('resize', setLayout)
+	window.addEventListener('resize', ()=>{
+		if (window.innerWIdth > 600) {
+			setLayout()
+		}
+		sceneInfo[3].values.rectStartY = 0
+	})
 	window.addEventListener('scroll', () => {
 		yOffset = window.pageYOffset;
 		scrollLoop();
@@ -561,4 +565,7 @@
 			rafState = true;
 		}
 	})
+	window.addEventListener('orientationchange', setLayout) // orientationchange는 모바일에서 가로 세로 바꿀 때 일어나는 이벤트
+
+	setCanvasImages()
 }) ();
