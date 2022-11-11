@@ -546,31 +546,34 @@
 		document.body.removeChild(document.querySelector('.loading'))
 		setLayout()
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0); // 배경 비디오 캔버스에 먼저 깔아주기
-	})
-	document.querySelector('.loading').addEventListener('transitionend', (e)=>{
-		document.body.removeChild(e.currentTarget)
-	})
 
+		window.addEventListener('resize', ()=>{
+			if (window.innerWIdth > 600) {
+				setLayout()
+			}
+			sceneInfo[3].values.rectStartY = 0
+		})
+
+		window.addEventListener('scroll', () => {
+			yOffset = window.pageYOffset;
+			scrollLoop();
+			checkMenu();
+			loop();
+			
+			if (!rafState) {
+				rafId = requestAnimationFrame(loop);
+				rafState = true;
+			}
+		})
+		window.addEventListener('orientationchange', setLayout) // orientationchange는 모바일에서 가로 세로 바꿀 때 일어나는 이벤트
+	
+	})
 	// html 객체들이 로드 끝났을 때. 그래서 img들은 미포함. load보다 실행 시점 빠름.
 	window.addEventListener('DOMcontentLoaded', setLayout)
-	window.addEventListener('resize', ()=>{
-		if (window.innerWIdth > 600) {
-			setLayout()
-		}
-		sceneInfo[3].values.rectStartY = 0
-	})
-	window.addEventListener('scroll', () => {
-		yOffset = window.pageYOffset;
-		scrollLoop();
-		checkMenu();
-		loop();
-		
-		if (!rafState) {
-			rafId = requestAnimationFrame(loop);
-			rafState = true;
-		}
-	})
-	window.addEventListener('orientationchange', setLayout) // orientationchange는 모바일에서 가로 세로 바꿀 때 일어나는 이벤트
+
+	document.querySelector('.loading').addEventListener('transitionend', (e)=>{
+		document.body.removeChild(e.currentTarget)
+	})	
 
 	setCanvasImages()
 }) ();
