@@ -201,6 +201,7 @@ body.before-load {
 #show-scene-3 #scroll-section-3 .sticky-elem {
     display: block;
     /* opacity: 0; */
+	will-change: transform, opacity;
 }
 
 .sticky-elem {
