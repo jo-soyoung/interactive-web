@@ -542,6 +542,8 @@
 
 	// 모~든 리소스들이 로드 끝났을 때.
 	window.addEventListener('load', () => {
+
+		// debugger; // 이렇게 하면 이 부분에서 debugger 작동됨
 		document.body.classList.remove('before-load')
 		document.body.removeChild(document.querySelector('.loading'))
 		setLayout()
